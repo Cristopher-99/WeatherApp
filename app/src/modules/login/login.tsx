@@ -30,45 +30,45 @@ export const LoginAdmin = () => {
   const [loginState, setLoginState] = useState(false);
   const dispatch = useCustomDispatch();
   const navigate = useNavigate();
-  
+
   interface UserI {
     email: string;
     password: string;
   }
-  
+
   interface UserResponseI {
     email: string;
     password: string;
-    accessToken:string
+    accessToken: string;
   }
 
-  const getUser = async (data:UserI): Promise<UserResponseI | null> => {
+  const getUser = async (data: UserI): Promise<UserResponseI | null> => {
     try {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       };
-      
+
       const response = await fetch(`${BACKEND_API}/auth`, requestOptions);
-      
+
       const parsed = await response.json();
       //Se agrega como prueba
       return { ...data, ...{ accessToken: '1233445' } } as UserResponseI;
-      if(response.status !== 200) {
+      if (response.status !== 200) {
         setLoginState(true);
         return null;
       } else {
         return { ...data, ...{ accessToken: parsed.accessToken } } as UserResponseI;
       }
-    } catch (error) { 
+    } catch (error) {
       return { ...data, ...{ accessToken: '1233445' } } as UserResponseI;
-      setLoginState(true)
-      console.error(error)
+      setLoginState(true);
+      console.error(error);
       return null;
     }
   };
-  
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -80,17 +80,16 @@ export const LoginAdmin = () => {
         setSubmitDisable(true);
 
         const userData = await getUser(values);
-        
-        if(userData){
-            const user = {
+
+        if (userData) {
+          const user = {
             name: userData?.email || '',
             isAuthenticated: true,
             accessToken: userData.accessToken
-          }
-          dispatch(setUserSession(user));    
+          };
+          dispatch(setUserSession(user));
           navigate(`${BASE_URL}/dashboard`, { replace: true });
         }
-
       } catch (error: unknown) {
         console.error(error);
       } finally {
@@ -109,13 +108,8 @@ export const LoginAdmin = () => {
           flexDirection: 'column',
           height: '100vh'
         }}>
-        <img
-          src={logo}
-          width={150}
-          height={150}
-          alt={'logo'}
-        />
-        <h2>Iniciar Session</h2>
+        <img src={logo} width={150} height={150} alt={'logo'} />
+        <h2>Iniciar Session aaaaaaaaaa</h2>
         <form
           style={{
             display: 'flex',
@@ -160,9 +154,9 @@ export const LoginAdmin = () => {
             Ingresar
           </Button>
         </form>
-        { loginState &&
-          <Alert severity="error">Error al intentar iniciar sesion</Alert>
-        }
+        {loginState && (
+          <Alert severity='error'>Error al intentar iniciar sesion</Alert>
+        )}
       </div>
     </div>
   );
